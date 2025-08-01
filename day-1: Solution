@@ -1,0 +1,21 @@
+Balancing Consonants and Vowels Ratio
+Solution:
+class Solution:
+    def countBalanced(self, arr):
+        vowels = set('aeiou')
+        diff_count = {0: 1}  # diff -> frequency
+        diff = 0
+        res = 0
+
+        for s in arr:
+            for ch in s:
+                if ch in vowels:
+                    diff += 1
+                else:
+                    diff -= 1
+            # Count balanced segments ending here
+            res += diff_count.get(diff, 0)
+            diff_count[diff] = diff_count.get(diff, 0) + 1
+
+        return res
+        

@@ -1,0 +1,30 @@
+2D Difference Array
+Solution:
+class Solution:
+    def applyDiff2D(self, mat, opr):
+        n, m = len(mat), len(mat[0])
+        diff = [[0] * (m + 1) for _ in range(n + 1)]
+
+        # Apply difference for each operation
+        for v, r1, c1, r2, c2 in opr:
+            diff[r1][c1] += v
+            diff[r1][c2 + 1] -= v
+            diff[r2 + 1][c1] -= v
+            diff[r2 + 1][c2 + 1] += v
+
+        # Prefix sum row-wise
+        for i in range(n):
+            for j in range(1, m):
+                diff[i][j] += diff[i][j - 1]
+
+        # Prefix sum column-wise
+        for j in range(m):
+            for i in range(1, n):
+                diff[i][j] += diff[i - 1][j]
+
+        # Apply diff to original matrix
+        for i in range(n):
+            for j in range(m):
+                mat[i][j] += diff[i][j]
+
+        return mat

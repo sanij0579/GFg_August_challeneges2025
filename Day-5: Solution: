@@ -1,0 +1,9 @@
+Palindrome Sentence
+Solution:
+class Solution:
+    def isPalinSent(self, s):
+        # Step 1: Filter alphanumeric characters and convert to lowercase
+        cleaned = [c.lower() for c in s if c.isalnum()]
+        
+        # Step 2: Check if the cleaned string is a palindrome
+        return cleaned == cleaned[::-1]

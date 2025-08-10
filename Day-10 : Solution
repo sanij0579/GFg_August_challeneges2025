@@ -1,0 +1,24 @@
+
+Palindrome SubStrings
+Solution:
+class Solution:
+    def countPS(self, s: str) -> int:
+        n = len(s)
+        if n < 2:
+            return 0
+
+        def expand_and_count(left: int, right: int) -> int:
+            cnt = 0
+            while left >= 0 and right < n and s[left] == s[right]:
+                if right - left + 1 >= 2:  # only count length >= 2
+                    cnt += 1
+                left -= 1
+                right += 1
+            return cnt
+
+        total = 0
+        for center in range(n):
+            total += expand_and_count(center, center)       # odd length
+            total += expand_and_count(center, center + 1)   # even length
+
+        return total

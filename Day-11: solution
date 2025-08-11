@@ -1,0 +1,78 @@
+Maximum Non-Overlapping Odd Palindrome Sum
+Solution( JAVA) :
+import java.util.*;
+
+class Solution {
+    public int maxSum(String s) {
+        int n = s.length();
+        if (n < 2) return 0;
+
+        int[] rad = manacherOdd(s);
+
+        // leftBest[i] = best odd palindrome length that ends exactly at index i (considering all nested ones)
+        int[] leftBest = new int[n];
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0])); // compare by center
+
+        for (int i = 0; i < n; ++i) {
+            // push center i with its maximum end
+            pq.offer(new int[]{i, i + rad[i] - 1});
+            // remove centers that no longer cover position i
+            while (!pq.isEmpty() && pq.peek()[1] < i) pq.poll();
+            if (!pq.isEmpty()) {
+                int minCenter = pq.peek()[0];
+                leftBest[i] = 2 * (i - minCenter) + 1;
+            } else {
+                leftBest[i] = 0;
+            }
+        }
+
+        // compute rightBest by doing same on reversed string and mapping back
+        String rs = new StringBuilder(s).reverse().toString();
+        int[] radR = manacherOdd(rs);
+        int[] leftR = new int[n];
+        PriorityQueue<int[]> pq2 = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
+        for (int i = 0; i < n; ++i) {
+            pq2.offer(new int[]{i, i + radR[i] - 1});
+            while (!pq2.isEmpty() && pq2.peek()[1] < i) pq2.poll();
+            if (!pq2.isEmpty()) {
+                int minCenter = pq2.peek()[0];
+                leftR[i] = 2 * (i - minCenter) + 1;
+            } else {
+                leftR[i] = 0;
+            }
+        }
+        int[] rightBest = new int[n];
+        for (int i = 0; i < n; ++i) {
+            rightBest[i] = leftR[n - 1 - i];
+        }
+
+        // prefix / suffix maxima
+        for (int i = 1; i < n; ++i) leftBest[i] = Math.max(leftBest[i], leftBest[i - 1]);
+        for (int i = n - 2; i >= 0; --i) rightBest[i] = Math.max(rightBest[i], rightBest[i + 1]);
+
+        // combine on split points
+        int ans = 0;
+        for (int i = 0; i < n - 1; ++i) {
+            ans = Math.max(ans, leftBest[i] + rightBest[i + 1]);
+        }
+        return ans;
+    }
+
+    // Manacher for odd-length palindromes: rad[i] = max k such that s[i-k+1 .. i+k-1] is palindrome
+    private int[] manacherOdd(String s) {
+        int n = s.length();
+        int[] rad = new int[n];
+        int L = 0, R = -1;
+        for (int i = 0; i < n; ++i) {
+            int k = 1;
+            if (i <= R) k = Math.min(rad[L + R - i], R - i + 1);
+            while (i - k >= 0 && i + k < n && s.charAt(i - k) == s.charAt(i + k)) ++k;
+            rad[i] = k;
+            if (i + k - 1 > R) {
+                L = i - k + 1;
+                R = i + k - 1;
+            }
+        }
+        return rad;
+    }
+}

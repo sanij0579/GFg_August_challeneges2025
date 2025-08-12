@@ -1,0 +1,24 @@
+Shop in Candy Store
+Solution:
+class Solution:
+    def minMaxCandy(self, prices, k):
+        prices.sort()
+        n = len(prices)
+        
+        # Min Cost
+        min_cost = 0
+        i, j = 0, n - 1
+        while i <= j:
+            min_cost += prices[i]  # Buy cheapest available
+            i += 1
+            j -= k  # Take k most expensive for free
+        
+        # Max Cost
+        max_cost = 0
+        i, j = 0, n - 1
+        while i <= j:
+            max_cost += prices[j]  # Buy most expensive available
+            j -= 1
+            i += k  # Take k cheapest for free
+        
+        return [min_cost, max_cost]

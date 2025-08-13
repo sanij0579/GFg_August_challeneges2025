@@ -1,0 +1,33 @@
+Tywin's War Strategy
+Solutiuon:
+class Solution:
+    def minSoldiers(self, arr, k):
+        n = len(arr)
+        required = (n + 1) // 2  # ceil(n/2)
+        
+        # Count already lucky troops
+        lucky_count = sum(1 for soldiers in arr if soldiers % k == 0)
+        
+        # If already enough lucky troops
+        if lucky_count >= required:
+            return 0
+        
+        # Calculate cost for each non-lucky troop
+        costs = []
+        for soldiers in arr:
+            if soldiers % k != 0:
+                cost = k - (soldiers % k)
+                costs.append(cost)
+        
+        # Sort costs to pick smallest ones first
+        costs.sort()
+        
+        # Add soldiers until we reach required lucky count
+        total_added = 0
+        for cost in costs:
+            total_added += cost
+            lucky_count += 1
+            if lucky_count >= required:
+                break
+        
+        return total_added

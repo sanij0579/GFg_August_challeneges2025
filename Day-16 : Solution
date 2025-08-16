@@ -1,0 +1,27 @@
+Form the Largest Number
+Solution:
+from functools import cmp_to_key
+
+class Solution:
+    def findLargest(self, arr):
+        # Custom comparator
+        def compare(x, y):
+            # If x+y is larger, x should come first
+            if x+y > y+x:
+                return -1
+            elif x+y < y+x:
+                return 1
+            else:
+                return 0
+
+        # Convert numbers to strings for concatenation
+        arr = list(map(str, arr))
+
+        # Sort using custom comparator
+        arr.sort(key=cmp_to_key(compare))
+
+        # Join all elements
+        result = ''.join(arr)
+
+        # Handle case like [0, 0, 0] -> return "0"
+        return '0' if result[0] == '0' else result

@@ -1,0 +1,22 @@
+Find H-Index
+
+Solution:
+class Solution:
+    def hIndex(self, citations):
+        n = len(citations)
+        # buckets[h] counts how many papers have exactly h citations,
+        # with bucket n collecting all papers having >= n citations.
+        buckets = [0] * (n + 1)
+        for c in citations:
+            if c >= n:
+                buckets[n] += 1
+            else:
+                buckets[c] += 1
+
+        # Walk from high to low: cumulative = papers with >= h citations
+        cumulative = 0
+        for h in range(n, -1, -1):
+            cumulative += buckets[h]
+            if cumulative >= h:
+                return h
+        return 0

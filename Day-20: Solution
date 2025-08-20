@@ -1,0 +1,37 @@
+Search in fully rotated sorted 2D matrix
+Solution:
+
+class Solution:
+    def searchMatrix(self, mat, x):
+        n = len(mat)
+        m = len(mat[0])
+
+        left, right = 0, n * m - 1
+        
+        while left <= right:
+            mid = (left + right) // 2
+            mid_val = mat[mid // m][mid % m]  # Map 1D index to 2D
+            
+            # Check if element found
+            if mid_val == x:
+                return True
+            
+            # Get values at start and mid
+            start_val = mat[left // m][left % m]
+            end_val = mat[right // m][right % m]
+
+            # Left half sorted
+            if start_val <= mid_val:
+                if start_val <= x < mid_val:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            # Right half sorted
+            else:
+                if mid_val < x <= end_val:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+
+        return False
+        

@@ -1,0 +1,17 @@
+Check if a String is Subsequence of Other
+Solution:
+class Solution:
+    def isSubSeq(self, s1, s2):
+        i, j = 0, 0
+        n, m = len(s1), len(s2)
+        
+        # Traverse both strings
+        while i < n and j < m:
+            # If current chars match, move i
+            if s1[i] == s2[j]:
+                i += 1
+            # Always move j
+            j += 1
+        
+        # If all chars of s1 are found in s2 in order
+        return i == n

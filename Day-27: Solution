@@ -1,0 +1,23 @@
+Count the number of possible triangles
+Solution:
+class Solution:
+    def countTriangles(self, arr):
+        n = len(arr)
+        arr.sort()   # Step 1: Sort array
+        count = 0
+        
+        # Step 2: Fix the largest side
+        for k in range(n - 1, 1, -1):  
+            i = 0
+            j = k - 1
+            
+            # Step 3: Two-pointer search
+            while i < j:
+                # If valid triangle
+                if arr[i] + arr[j] > arr[k]:
+                    count += (j - i)  # All pairs from i to j-1 are valid
+                    j -= 1
+                else:
+                    i += 1
+                    
+        return count
